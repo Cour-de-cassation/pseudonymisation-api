@@ -1,0 +1,5 @@
+pip-date
+juritools
+fastapi==0.65.2
+uvicorn[standard]==0.13.4
+python-dotenv==1.0.0

@@ -1,0 +1,8 @@
+models/
+.env
+__pycache__
+*.pyc
+.vscode
+scripts/
+k8s/
+venv
