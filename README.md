@@ -2,22 +2,24 @@
 
 ## Installation
 
-Nous détaillons ici l'installation de l'API.
-
+Nous détaillons ici l'installation complète de l'environnement permettant de faire fonctionner l'API.
 
 Il faut au préalable installer le tokenizer spécifique aux décisions de jusitice, [jurispacy-tokenizer](https://github.com/Cour-de-cassation/jurispacy-tokenizer) et [juritools](https://github.com/Cour-de-cassation/juritools), le moteur de pseudonymisation de la Cour de cassation, ainsi que ses dépendances.
 
 Finalement, on installe les dépendances liées à l'API :
-```console
-$ cd nlp-pseudonymisation-api
-$ pip install -r requirements.txt
+
+```sh
+cd nlp-pseudonymisation-api
+pip install -r requirements.txt
+conda deactivate
 ```
 
 ## Lancer l'API
 
-```console
-$ cd nlp-pseudonymisation-api
-$ python server.py
+Pour lancer l'API, on peut utiliser le fichier `server.py`:
+
+```sh
+python server.py
 ```
 
 ## Exemple de requêtes
@@ -32,14 +34,14 @@ class Decision(BaseModel):
     text: str
     source: Optional[str] = None
     meta: Optional[str] = None
-    categories: Optional[List[str]] = None
+    categories: Optional[list[str]] = None
 ```
 
 Il renvoie un JSON contenant une liste d'entités ainsi que des mises en doute.
 
 L'autre endpoint permet de calculer la loss d'un document après sa vérification par un agent.
 
-Les exemples de requêtes ci-dessous sont effectués en Python 3.9.
+Les exemples de requêtes ci-dessous sont effectués en Python 3.7
 
 ### **Exemple de retour au format json d'une requête sur le endpoint /ner**
 
@@ -70,17 +72,56 @@ Les exemples de requêtes ci-dessous sont effectués en Python 3.9.
     ],
     "check_needed": true,
     "checklist": [
-        "L'annotation 'Dupont' est de catégorie 'personnePhysique' mais on retrouve la même annotation dans une autre catégorie 'professionnelMagistratGreffier'. Les annotations sont-elles réellement de catégories différentes ?",
+        "L'entité 'Dupont' appartenant à la classe 'personnePhysique' se retrouve également dans une autre classe, une vérification manuelle est nécessaire.",
     ]
 }
 ```
 
 ## Tests
 
-Pour lancer les différents tests unitaires de l'API:
+### Structure des tests
 
-```console
-$ pip install pytest
-$ cd nlp-pseudonymisation-api
-$ pytest
+Les tests de l'API sont contenus dans deux fichiers du dossier `tests`:
+
+- `test_app.py`: permet de tester les différents points de terminaison de l'API.
+
+### Prérequis
+
+Pour lancer les tests, il faut installer les librairies de développement:
+
+```sh
+cd nlp-pseudonymisation-api
+pip install -r requirements-dev.txt
 ```
+
+De plus, pour tester le modèle, il faut préciser le chemin vers le modèle utilisé dans la variable d'environnement `MODEL_JURICA`.
+
+```sh
+export MODEL_JURICA='models/new_categories_model.pt'
+```
+
+### Tester l'API en lançant automatiquement une instance
+
+Si on souhaite lancer une instance de l'API et la tester directement, on peut simplement utiliser:
+
+```sh
+cd nlp-pseudonymisation-api
+pytest tests
+```
+
+### Tester une instance de l'API en fonctionnement
+
+Si on souhaite lancer une instance de l'API pré-existante (python ou container docker), on doit spécifier l'URL de l'API dans une variable d'environnement `API_URL`:
+
+```sh
+export API_URL='http://localhost:8081'
+```
+
+Puis on peut lancer les tests avec:
+
+```sh
+cd nlp-pseudonymisation-api
+python tests/test_app.py
+```
+
+Pour supprimer la variable d'environnement `API_URL`, on fait simplement `unset API_URL`.

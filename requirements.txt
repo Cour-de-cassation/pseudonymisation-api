@@ -1,5 +1,5 @@
-pip-date
-juritools
-fastapi==0.65.2
-uvicorn[standard]==0.13.4
+juritools==0.13.8
+fastapi==0.103.0
+uvicorn==0.23.2
 python-dotenv==1.0.0
+prometheus-fastapi-instrumentator==6.1.0
