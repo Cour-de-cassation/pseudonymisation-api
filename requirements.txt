@@ -1,5 +1,5 @@
 juritools==0.13.8
-fastapi==0.103.0
+fastapi==0.109.1
 uvicorn==0.23.2
 python-dotenv==1.0.0
 prometheus-fastapi-instrumentator==6.1.0
